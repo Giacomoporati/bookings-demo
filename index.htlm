@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Atlantic Edge – Rebook</title>
+<style>
+:root{--sea:#0b5c7a;--sea-d:#073f54;--sand:#f6f1e7;--ink:#14212b;--muted:#5b6b75;--red:#c62828;--red-bg:#fdecea;--green:#1b7a3d;--green-bg:#e7f5ec;--card:#fff;--line:#d9e2e7}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0}
+body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--sand);color:var(--ink);font-size:18px;line-height:1.35;touch-action:manipulation;padding-bottom:calc(110px + env(safe-area-inset-bottom))}
+.sample{background:#ffd54f;color:#3a2c00;text-align:center;font-weight:700;font-size:14px;padding:6px 12px}
+header{background:var(--sea);color:#fff;padding:12px 16px}
+header h1{margin:0;font-size:20px}
+header p{margin:2px 0 0;font-size:14px;opacity:.85}
+main{max-width:560px;margin:0 auto;padding:16px}
+button{font:inherit;cursor:pointer;border:none;border-radius:14px;touch-action:manipulation}
+button:disabled{opacity:.3;cursor:default}
+.btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;min-height:64px;padding:12px 16px;font-size:20px;font-weight:700;margin-top:12px;text-decoration:none;border-radius:14px}
+.danger{background:#fff;color:var(--red);border:3px solid var(--red)}
+.danger-solid{background:var(--red);color:#fff;margin:0 0 16px}
+.call{background:var(--sea);color:#fff}
+.opt{background:var(--green-bg);color:var(--green);border:3px solid var(--green);justify-content:space-between;min-height:72px}
+.opt small{font-size:16px;font-weight:600}
+.ghost{background:var(--sea);color:#fff}
+.reset{background:transparent;color:var(--muted);border:2px dashed var(--muted);font-size:17px;margin-top:28px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;margin-bottom:14px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+.row{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.time{font-size:30px;font-weight:800}
+.meta{color:var(--muted);font-size:16px;margin-top:2px}
+.count{text-align:right;font-size:18px;color:var(--muted)}
+.count b{font-size:30px;color:var(--ink)}
+.count small{display:block;font-size:13px}
+.count.full b{color:var(--red)}
+.names{margin-top:10px;font-size:16px}
+.muted{color:var(--muted)}
+.small{font-size:14px;text-align:center}
+.badge{display:inline-block;padding:6px 12px;border-radius:999px;font-size:15px;font-weight:700;margin-top:10px}
+.grey{background:#e6eaed;color:#445}
+.is-cancelled{opacity:.6;background:#eef1f3}
+.is-past{opacity:.6}
+.daynav{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.nav-btn{width:72px;height:72px;background:var(--sea);color:#fff;font-size:28px;flex:none}
+.daylabel{flex:1;text-align:center}
+.daylabel strong{display:block;font-size:24px}
+.daylabel span{color:var(--muted);font-size:16px}
+.summary{font-size:18px;font-weight:600;margin:0 0 14px}
+.red-txt{color:var(--red)}
+.rb.is-overdue{background:var(--red-bg);border:3px solid var(--red)}
+.flag{background:var(--red);color:#fff;font-weight:800;padding:8px 12px;border-radius:10px;margin-bottom:10px;font-size:17px}
+.name{font-size:22px;font-weight:800}
+.size{font-size:18px;font-weight:700;white-space:nowrap}
+.movelabel{margin-top:14px;font-weight:700;color:var(--muted);font-size:16px}
+.empty{text-align:center;padding:40px 16px}
+.empty .big{font-size:64px;color:var(--green)}
+.tile{background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px;margin-bottom:14px}
+.tile .lbl{font-size:16px;color:var(--muted);font-weight:600}
+.tile .val{font-size:40px;font-weight:800;margin-top:4px}
+.tile .sub{font-size:16px;color:var(--muted)}
+.tile.hero{background:var(--sea);color:#fff;border:none}
+.tile.hero .lbl,.tile.hero .sub{color:#d6ecf3}
+.tile.hero .val{font-size:52px}
+.tile.red{background:var(--red-bg);border:3px solid var(--red)}
+.tile.red .val{color:var(--red)}
+.tile.green .val{color:var(--green)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.grid .tile{margin-bottom:0}
+.grid+.tile{margin-top:14px}
+.tabs{position:fixed;left:0;right:0;bottom:0;display:flex;background:var(--sea-d);padding:8px 8px calc(8px + env(safe-area-inset-bottom));gap:8px;z-index:10}
+.tabs button{flex:1;min-height:76px;background:transparent;color:#cfe3ea;font-size:17px;font-weight:700;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative}
+.tabs button.active{background:#fff;color:var(--sea-d)}
+.tabs .ic{font-size:26px;line-height:1}
+.badge-n{position:absolute;top:6px;right:14%;background:var(--red);color:#fff;border-radius:999px;font-size:14px;min-width:26px;height:26px;display:flex;align-items:center;justify-content:center;padding:0 6px}
+.badge-n:empty{display:none}
+.toast{position:fixed;left:12px;right:12px;bottom:calc(104px + env(safe-area-inset-bottom));max-width:536px;margin:0 auto;background:#14212b;color:#fff;border-radius:16px;padding:12px 12px 12px 18px;display:flex;align-items:center;gap:12px;z-index:20;font-size:17px;box-shadow:0 6px 20px rgba(0,0,0,.25)}
+.toast[hidden]{display:none}
+.toast span{flex:1}
+.toast button{background:#ffd54f;color:#3a2c00;font-weight:800;min-height:56px;min-width:96px;font-size:18px}
+footer{text-align:center;font-size:13px;color:var(--muted);padding:8px 16px}
+</style>
+</head>
+<body>
+<div class="sample">SAMPLE DATA — fictional bookings for demonstration</div>
+<header>
+  <h1>Atlantic Edge Surf School</h1>
+  <p>Lahinch · Cancel &amp; rebook (alpha)</p>
+</header>
+<main id="app"></main>
+<footer>Alpha prototype · fictional business · changes save in this browser only</footer>
+
+<div id="toast" class="toast" hidden><span id="tmsg"></span><button data-act="undo">Undo</button></div>
+
+<nav class="tabs">
+  <button data-act="tab" data-tab="today"><span class="ic">☀</span>Today</button>
+  <button data-act="tab" data-tab="rebook"><span class="ic">↻</span>Rebook<span class="badge-n" id="rbn"></span></button>
+  <button data-act="tab" data-tab="money"><span class="ic">€</span>Money</button>
+</nav>
+
+<script>
+const PRICE=45, CAP=12, KEY='atlanticEdgeRebook_v1', H48=48*3600*1000;
+const TIMES=['09:00','10:30','12:00','13:30','15:00','16:30'];
+const INSTR=['Ciara','Darragh','Aoife','Tomás','Seán'];
+let tab='today', dayOffset=0, undoSnap=null, toastTimer=null;
+
+const pad=n=>String(n).padStart(2,'0');
+const ymd=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+const startOfDay=d=>{const x=new Date(d);x.setHours(0,0,0,0);return x};
+const addDays=(d,n)=>{const x=new Date(d);x.setDate(x.getDate()+n);return x};
+const parseDate=s=>{const[y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d)};
+const startOf=s=>{const d=parseDate(s.date);const[h,mi]=s.time.split(':').map(Number);d.setHours(h,mi,0,0);return d.getTime()};
+const fmtDay=s=>parseDate(s).toLocaleDateString('en-IE',{weekday:'short',day:'numeric',month:'short'});
+const euro=n=>'€'+n.toLocaleString('en-IE');
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const plural=(n,w)=>n+' '+w+(n===1?'':'s');
+
+function mkSession(date,time,i){return{id:date+'_'+time,date,time,instructor:INSTR[i%INSTR.length],capacity:CAP,cancelled:false}}
+
+function cancelIn(st,id,now){
+  const s=st.sessions.find(x=>x.id===id); if(!s||s.cancelled) return 0;
+  s.cancelled=true; s.cancelledAt=now; let n=0;
+  st.bookings.forEach(b=>{if(b.status==='booked'&&b.sessionId===id){b.status='torebook';b.cancelledAt=now;b.fromSession=id;n++}});
+  return n;
+}
+
+function seed(){
+  const t0=startOfDay(new Date());
+  const st={sessions:[],bookings:[]};
+  for(let d=-3;d<=7;d++){const date=ymd(addDays(t0,d));TIMES.forEach((t,i)=>st.sessions.push(mkSession(date,t,i)))}
+  // [day offset, time, name, group size, contact]  — all fictional
+  const B=[
+    [-3,'09:00',"O'Brien family",4,'087 555 0101'],
+    [-3,'10:30','Mark Doyle',2,'086 555 0102'],
+    [-3,'12:00','Mairéad Hogan (rowing club)',6,'085 555 0103'],
+    [-1,'09:00','Sarah Kelly',3,'087 555 0104'],
+    [-1,'09:00','Ruairí Byrne',1,'083 555 0105'],
+    [-1,'10:30','Emma Walsh (hen party)',7,'087 555 0106'],
+    [0,'09:00','Liam Murphy',2,'086 555 0107'],
+    [0,'09:00','Niall Ryan',4,'087 555 0108'],
+    [0,'10:30','Fitzgerald family',5,'085 555 0109'],
+    [0,'10:30','Chloe Brennan',2,'087 555 0110'],
+    [0,'10:30','Jack Nolan',1,'083 555 0111'],
+    [0,'12:00','Pádraig Hayes (scout troop)',10,'087 555 0112'],
+    [0,'13:30','Orla Quinn',2,'086 555 0113'],
+    [0,'13:30','Kevin Lynch',3,'087 555 0114'],
+    [0,'15:00','Anouk de Vries',4,'085 555 0115'],
+    [0,'16:30','Sinéad Daly',2,'087 555 0116'],
+    [1,'09:00','Team day (fictional company)',12,'087 555 0117'],
+    [1,'10:30','Ava McCarthy',6,'086 555 0118'],
+    [1,'10:30','Conor Walsh',5,'087 555 0119'],
+    [1,'12:00','Siobhán Clarke',2,'083 555 0120'],
+    [1,'15:00','Eoin Power',3,'087 555 0121'],
+    [2,'09:00','Aoibhinn Moran',4,'085 555 0122'],
+    [2,'12:00','Darren Kenny',8,'087 555 0123'],
+    [3,'10:30','Grace Kennedy',2,'086 555 0124']
+  ];
+  B.forEach(([d,time,name,size,contact],i)=>st.bookings.push({id:'b'+(i+1),name,size,contact,sessionId:ymd(addDays(t0,d))+'_'+time,status:'booked'}));
+  const at=(d,h,m)=>{const x=addDays(t0,d);x.setHours(h,m,0,0);return x.getTime()};
+  TIMES.forEach(t=>cancelIn(st,ymd(addDays(t0,-3))+'_'+t,at(-3,7,15)));   // whole day cancelled 3 days ago → red
+  ['09:00','10:30'].forEach(t=>cancelIn(st,ymd(addDays(t0,-1))+'_'+t,at(-1,7,40))); // yesterday morning
+  return st;
+}
+
+function load(){try{return JSON.parse(localStorage.getItem(KEY))}catch(e){return null}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}}
+function ensureSessions(){
+  const t0=startOfDay(new Date()); const ids=new Set(state.sessions.map(s=>s.id));
+  for(let d=0;d<=7;d++){const date=ymd(addDays(t0,d));TIMES.forEach((t,i)=>{if(!ids.has(date+'_'+t))state.sessions.push(mkSession(date,t,i))})}
+}
+
+let state=load(); if(!state||!state.sessions) state=seed(); ensureSessions(); save();
+
+const sess=id=>state.sessions.find(s=>s.id===id);
+const bookedOn=sid=>state.bookings.filter(b=>b.status==='booked'&&b.sessionId===sid);
+const used=sid=>bookedOn(sid).reduce((a,b)=>a+b.size,0);
+const free=sid=>(sess(sid)?sess(sid).capacity:CAP)-used(sid);
+const toRebook=()=>state.bookings.filter(b=>b.status==='torebook');
+const overdue=b=>Date.now()-b.cancelledAt>H48;
+function options(b){
+  const now=Date.now();
+  return state.sessions.filter(s=>!s.cancelled&&startOf(s)>now&&free(s.id)>=b.size).sort((a,c)=>startOf(a)-startOf(c)).slice(0,3);
+}
+function waited(ms){const h=Math.floor(ms/3600000);if(h<1)return Math.max(1,Math.floor(ms/60000))+' min';if(h<24)return h+'h';return Math.floor(h/24)+'d '+(h%24)+'h'}
+
+function renderToday(){
+  const now=Date.now(), date=ymd(addDays(startOfDay(new Date()),dayOffset));
+  const list=state.sessions.filter(s=>s.date===date).sort((a,b)=>a.time.localeCompare(b.time));
+  const label=dayOffset===0?'Today':dayOffset===1?'Tomorrow':parseDate(date).toLocaleDateString('en-IE',{weekday:'long'});
+  const cancellable=list.filter(s=>!s.cancelled&&startOf(s)>now);
+  let h=`<div class="daynav"><button class="nav-btn" data-act="day" data-d="-1" ${dayOffset<=0?'disabled':''} aria-label="Previous day">◀</button><div class="daylabel"><strong>${label}</strong><span>${fmtDay(date)}</span></div><button class="nav-btn" data-act="day" data-d="1" ${dayOffset>=7?'disabled':''} aria-label="Next day">▶</button></div>`;
+  if(cancellable.length>1) h+=`<button class="btn danger-solid" data-act="cancelday" data-date="${date}">✕ Cancel all ${cancellable.length} remaining sessions</button>`;
+  list.forEach(s=>{
+    if(s.cancelled){
+      const moved=state.bookings.filter(b=>b.fromSession===s.id).length;
+      h+=`<div class="card session is-cancelled"><div class="row"><div class="time">${s.time}</div><span class="badge grey">Cancelled</span></div><div class="meta">${plural(moved,'booking')} sent to Rebook</div></div>`;
+      return;
+    }
+    const bs=bookedOn(s.id), u=used(s.id), past=startOf(s)<=now;
+    h+=`<div class="card session ${past?'is-past':''}"><div class="row"><div><div class="time">${s.time}</div><div class="meta">Instructor: ${esc(s.instructor)}</div></div><div class="count ${u>=s.capacity?'full':''}"><b>${u}</b>/${s.capacity}<small>people</small></div></div>`+
+      (bs.length?`<div class="names">${bs.map(b=>esc(b.name)+' ('+b.size+')').join(' · ')}</div>`:`<div class="names muted">No bookings</div>`)+
+      (past?`<span class="badge grey">Started / finished</span>`:`<button class="btn danger" data-act="cancel" data-id="${s.id}">✕ Cancel session</button>`)+`</div>`;
+  });
+  return h;
+}
+
+function renderRebook(){
+  const now=Date.now(), list=toRebook().sort((a,b)=>a.cancelledAt-b.cancelledAt), od=list.filter(overdue).length;
+  if(!list.length) return `<div class="empty"><div class="big">✓</div><p><b>Nothing to rebook.</b></p><p class="muted">Cancel a session in Today and its bookings appear here.</p></div>`;
+  let h=`<p class="summary">${plural(list.length,'booking')} to rebook${od?` · <span class="red-txt">${od} over 48h</span>`:''}</p>`;
+  list.forEach(b=>{
+    const from=sess(b.fromSession), o=overdue(b), opts=options(b);
+    h+=`<div class="card rb ${o?'is-overdue':''}">${o?'<div class="flag">⚠ Not rebooked after 48 hours</div>':''}
+      <div class="row"><div class="name">${esc(b.name)}</div><div class="size">${b.size} ${b.size===1?'person':'people'}</div></div>
+      <div class="meta">Was ${from?fmtDay(from.date)+' · '+from.time:'—'} · waiting ${waited(now-b.cancelledAt)}</div>
+      <a class="btn call" href="tel:${b.contact.replace(/\s/g,'')}">📞 ${esc(b.contact)}</a>
+      <div class="movelabel">Tap to move to:</div>`+
+      (opts.length?opts.map(s=>`<button class="btn opt" data-act="move" data-b="${b.id}" data-s="${s.id}"><span>${fmtDay(s.date)} · ${s.time}</span><small>${free(s.id)} free</small></button>`).join('')
+        :`<p class="muted">No upcoming session has ${b.size} free places.</p>`)+`</div>`;
+  });
+  return h;
+}
+
+function renderMoney(){
+  const list=toRebook(), people=list.reduce((a,b)=>a+b.size,0);
+  const od=list.filter(overdue), odp=od.reduce((a,b)=>a+b.size,0);
+  const re=state.bookings.filter(b=>b.rebooked&&b.status==='booked'), rep=re.reduce((a,b)=>a+b.size,0);
+  return `<div class="tile hero"><div class="lbl">Value at risk</div><div class="val">${euro(people*PRICE)}</div><div class="sub">${plural(people,'person')} waiting × ${euro(PRICE)} per lesson</div></div>
+    <div class="grid"><div class="tile"><div class="lbl">Bookings to rebook</div><div class="val">${list.length}</div></div>
+    <div class="tile ${od.length?'red':''}"><div class="lbl">Over 48 hours</div><div class="val">${od.length}</div><div class="sub">${euro(odp*PRICE)} at risk</div></div></div>
+    <div class="tile green"><div class="lbl">Rebooked in this app</div><div class="val">${re.length}</div><div class="sub">${euro(rep*PRICE)} kept</div></div>
+    ${list.length?'<button class="btn ghost" data-act="tab" data-tab="rebook">Go to Rebook →</button>':''}
+    <button class="btn reset" data-act="reset">Reset sample data</button>
+    <p class="muted small">Sample data only. Changes are saved in this browser.</p>`;
+}
+
+function render(){
+  const app=document.getElementById('app');
+  app.innerHTML=tab==='today'?renderToday():tab==='rebook'?renderRebook():renderMoney();
+  document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
+  const n=toRebook().length; document.getElementById('rbn').textContent=n?n:'';
+}
+
+function toast(msg){
+  document.getElementById('tmsg').textContent=msg;
+  const t=document.getElementById('toast'); t.hidden=false;
+  clearTimeout(toastTimer); toastTimer=setTimeout(()=>{t.hidden=true;undoSnap=null},7000);
+}
+function hideToast(){document.getElementById('toast').hidden=true;clearTimeout(toastTimer)}
+function snap(){undoSnap=JSON.stringify(state)}
+
+document.addEventListener('click',e=>{
+  const el=e.target.closest('[data-act]'); if(!el||el.disabled) return;
+  const a=el.dataset.act;
+  if(a==='tab'){tab=el.dataset.tab;render();window.scrollTo(0,0);return}
+  if(a==='day'){dayOffset=Math.max(0,Math.min(7,dayOffset+Number(el.dataset.d)));render();return}
+  if(a==='cancel'){
+    const s=sess(el.dataset.id); snap(); const n=cancelIn(state,s.id,Date.now()); save(); render();
+    toast(`${s.time} cancelled · ${plural(n,'booking')} to rebook`); return;
+  }
+  if(a==='cancelday'){
+    snap(); const now=Date.now(); let n=0, k=0;
+    state.sessions.filter(s=>s.date===el.dataset.date&&!s.cancelled&&startOf(s)>now).forEach(s=>{n+=cancelIn(state,s.id,now);k++});
+    save(); render(); toast(`${plural(k,'session')} cancelled · ${plural(n,'booking')} to rebook`); return;
+  }
+  if(a==='move'){
+    const b=state.bookings.find(x=>x.id===el.dataset.b), s=sess(el.dataset.s);
+    if(!b||!s||free(s.id)<b.size){render();return}
+    snap(); b.sessionId=s.id; b.status='booked'; b.rebooked=true; b.rebookedAt=Date.now(); save(); render();
+    toast(`${b.name} → ${fmtDay(s.date)} ${s.time}`); return;
+  }
+  if(a==='undo'){if(undoSnap){state=JSON.parse(undoSnap);undoSnap=null;save();render()}hideToast();return}
+  if(a==='reset'){
+    if(!confirm('Reset all sample data?')) return;
+    try{localStorage.removeItem(KEY)}catch(e){} state=seed(); ensureSessions(); save(); dayOffset=0; hideToast(); render();
+  }
+});
+
+setInterval(render,60000); // keeps the 48-hour red rule and "waiting" times current
+render();
+</script>
+</body>
+</html>
