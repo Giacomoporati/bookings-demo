@@ -223,7 +223,7 @@ function renderMoney(){
   const list=toRebook(), people=list.reduce((a,b)=>a+b.size,0);
   const od=list.filter(overdue), odp=od.reduce((a,b)=>a+b.size,0);
   const re=state.bookings.filter(b=>b.rebooked&&b.status==='booked'), rep=re.reduce((a,b)=>a+b.size,0);
-  return `<div class="tile hero"><div class="lbl">Value at risk</div><div class="val">${euro(people*PRICE)}</div><div class="sub">${plural(people,'person')} waiting × ${euro(PRICE)} per lesson</div></div>
+  return `<div class="tile hero"><div class="lbl">Value at risk</div><div class="val">${euro(people*PRICE)}</div><div class="sub">${people===1?'1 person':people+' people'} waiting × ${euro(PRICE)} per lesson</div></div>
     <div class="grid"><div class="tile"><div class="lbl">Bookings to rebook</div><div class="val">${list.length}</div></div>
     <div class="tile ${od.length?'red':''}"><div class="lbl">Over 48 hours</div><div class="val">${od.length}</div><div class="sub">${euro(odp*PRICE)} at risk</div></div></div>
     <div class="tile green"><div class="lbl">Rebooked in this app</div><div class="val">${re.length}</div><div class="sub">${euro(rep*PRICE)} kept</div></div>
